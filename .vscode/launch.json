@@ -10,8 +10,8 @@
             "request": "launch",
             "program": "/home/wizbird/Code/4.Graph_experiment/main",
             "args": [
-                "xjtu",
-                "moon"
+                "腾飞塔",
+                "北门"
             ],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",

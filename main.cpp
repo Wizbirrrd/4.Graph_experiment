@@ -22,13 +22,6 @@ typedef struct {
   GraphKind kind;
 } Mgraph;
 
-void array_fill(int *array, int len, int val) {
-  int i;
-  for (i = 0; i < len; i++) {
-    array[i] = val;
-  }
-}
-
 //根据字符串寻找邻接矩阵的下标
 Status TrackPosition(string *s, string t, int &p) {
   int i = 0;
@@ -42,110 +35,58 @@ Status TrackPosition(string *s, string t, int &p) {
 }
 
 // Dijkstra算法实现
-Status D(Mgraph G, string From, string To) {
+Status Dijkstra(Mgraph G, string From, string To) {
   int from, to;
   if (!TrackPosition(G.vexs, From, from) || !TrackPosition(G.vexs, To, to)) {
     printf("ERROR_02");
     return ERROR;
-  }
+  } //合法性输入检查
+
   int i;
   int *shortest = (int *)malloc(sizeof(int) * V_SIZE);
   if (!shortest)
     return (OVERFLOW);
+  Status *IsMin = (Status *)malloc(sizeof(Status) * V_SIZE);
+  if (!IsMin)
+    return (OVERFLOW);
   for (i = 0; i < V_SIZE; i++) {
     shortest[i] = G.edge[from][i];
-  }
+    IsMin[i] = FALSE;
+    if (shortest[i] == 0) {
+      IsMin[i] = TRUE;
+    }
+  } //初始化距离数组用于迭代
 
   int Min, MinPos;
-  while (1) {
+  Status Over = TRUE;
+  while (Over) {
     Min = INF;
+    Over = FALSE;
     for (i = 0; i < V_SIZE; i++) {
-      if (Min > shortest[i] && shortest[i]) {
+      if (Min > shortest[i] && !IsMin[i]) {
         Min = shortest[i];
         MinPos = i;
-      }
+        IsMin[i] = TRUE;
+        Over = TRUE;
+      } //寻找距离最近的结点并标记
     }
     for (i = 0; i < V_SIZE; i++) {
       if (shortest[i] > G.edge[MinPos][i] + Min) {
         shortest[i] = G.edge[MinPos][i] + Min;
       }
-    }
-  }
-  cout << shortest[to];
-  return OK;
-}
-Status Dijkstra(int graph[][V_SIZE], int len, int start, int dist[]) {
-  int *path = (int *)malloc(sizeof(int) * len);
-  int *shortest = (int *)malloc(sizeof(int) * len);
-  int *mark = (int *)malloc(sizeof(int) * len);
-  int min, v, i, j;
-  array_fill(mark, len, 0);
-  array_fill(dist, len, INF);
-
-  for (i = 0; i < len; i++) {
-    dist[i] = graph[start][i];
-    if (i != start && dist[i] < INF)
-      path[i] = start;
-    else
-      path[i] = -1;
-  }
-  mark[start] = 1;
-  while (1) {
-    min = INF;
-    v = -1;
-    //找到最小的距离
-    for (i = 0; i < len; i++) {
-      if (!mark[i]) {
-        if (dist[i] < min) {
-          min = dist[i];
-          v = i;
-        }
-      }
-    }
-    if (v == -1)
-      break; //找不到更短的路径了
-    //更新最短路径
-    mark[v] = 1;
-    for (i = 0; i < len; i++) {
-      if (!mark[i] && graph[v][i] != INF && dist[v] + graph[v][i] < dist[i]) {
-        dist[i] = dist[v] + graph[v][i];
-        path[i] = v;
-      }
-    }
-  }
-  //输出路径
-  printf("起点\t终点\t最短距离\t对应路径 \n");
-  for (i = 0; i < len; i++) {
-    if (i == start)
-      continue;
-    array_fill(shortest, len, 0);
-    printf("%d\t", start);
-    printf("%d\t", i);
-    printf("%d\t", dist[i]);
-    int k = 0;
-    shortest[k] = i;
-    while (path[shortest[k]] != start) {
-      k++;
-      shortest[k] = path[shortest[k - 1]];
-    }
-    k++;
-    shortest[k] = start;
-    for (j = k; j > 0; j--) {
-      printf("%d->", shortest[j]);
-    }
-    printf("%d\n", shortest[0]);
-  }
-  free(path);
+    } //更新距离数组
+  }   //迭代结束的条件:对所有结点都找到了最短路径
+  printf("%d", shortest[to]);
   free(shortest);
-  free(mark);
+  free(IsMin); //释放内存
   return OK;
 }
 
 int main(int argc, char **argv) {
-  // if (argc != ARGC) {
-  //   printf("ERROR_01");
-  //   return ERROR;
-  // } //命令行参数检查
+  if (argc != ARGC) {
+    printf("ERROR_01");
+    return ERROR;
+  } //命令行参数检查
 
   Mgraph XJTUMap = {
       {"北门", "饮水思源", "腾飞塔", "图书馆", "教学主楼", "活动中心", "南门",
@@ -171,7 +112,7 @@ int main(int argc, char **argv) {
       AG,     //无向图
   };
 
-  D(XJTUMap, "北门", "传送门1");
+  Dijkstra(XJTUMap, argv[1], argv[2]);
 
   return 0;
 }
