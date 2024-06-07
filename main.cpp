@@ -29,6 +29,51 @@ void array_fill(int *array, int len, int val) {
   }
 }
 
+//根据字符串寻找邻接矩阵的下标
+Status TrackPosition(string *s, string t, int &p) {
+  int i = 0;
+  for (i = 0; s[i] != t; i++) {
+    if (i == V_SIZE) {
+      return ERROR;
+    };
+  }
+  p = i;
+  return OK;
+}
+
+// Dijkstra算法实现
+Status D(Mgraph G, string From, string To) {
+  int from, to;
+  if (!TrackPosition(G.vexs, From, from) || !TrackPosition(G.vexs, To, to)) {
+    printf("ERROR_02");
+    return ERROR;
+  }
+  int i;
+  int *shortest = (int *)malloc(sizeof(int) * V_SIZE);
+  if (!shortest)
+    return (OVERFLOW);
+  for (i = 0; i < V_SIZE; i++) {
+    shortest[i] = G.edge[from][i];
+  }
+
+  int Min, MinPos;
+  while (1) {
+    Min = INF;
+    for (i = 0; i < V_SIZE; i++) {
+      if (Min > shortest[i] && shortest[i]) {
+        Min = shortest[i];
+        MinPos = i;
+      }
+    }
+    for (i = 0; i < V_SIZE; i++) {
+      if (shortest[i] > G.edge[MinPos][i] + Min) {
+        shortest[i] = G.edge[MinPos][i] + Min;
+      }
+    }
+  }
+  cout << shortest[to];
+  return OK;
+}
 Status Dijkstra(int graph[][V_SIZE], int len, int start, int dist[]) {
   int *path = (int *)malloc(sizeof(int) * len);
   int *shortest = (int *)malloc(sizeof(int) * len);
@@ -120,14 +165,13 @@ int main(int argc, char **argv) {
           {INF, INF, INF, 4, INF, INF, 21, INF, 43, INF, 0, INF, INF},
           {22, INF, 4, INF, INF, INF, INF, INF, INF, INF, INF, 0, INF},
           {INF, INF, 32, INF, INF, INF, INF, 4, INF, INF, INF, INF, 0},
-      },  //弧权值数组
+      },      //弧权值数组
       V_SIZE, //顶点数
-      18, //弧段数
-      AG, //无向图
+      18,     //弧段数
+      AG,     //无向图
   };
 
-  int dist[V_SIZE];
-  Dijkstra(XJTUMap.edge, V_SIZE, 0, dist);
+  D(XJTUMap, "北门", "传送门1");
 
   return 0;
 }
