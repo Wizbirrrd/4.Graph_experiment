@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string.h>
 
 using namespace std;
 
@@ -49,11 +50,16 @@ Status Dijkstra(Mgraph G, string From, string To) {
   Status *IsMin = (Status *)malloc(sizeof(Status) * V_SIZE);
   if (!IsMin)
     return (OVERFLOW);
+  char **Path = (char **)malloc(sizeof(char) * V_SIZE);
+  if (!Path)
+    return (OVERFLOW);
   for (i = 0; i < V_SIZE; i++) {
     shortest[i] = G.edge[from][i];
     IsMin[i] = FALSE;
+    strcpy(Path[i],"i");
     if (shortest[i] == 0) {
       IsMin[i] = TRUE;
+      strcpy(Path[i],"\0");
     }
   } //初始化距离数组用于迭代
 

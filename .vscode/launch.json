@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "/home/wizbird/Code/4.Graph_experiment/main",
             "args": [
-                "腾飞塔",
+                "南门",
                 "北门"
             ],
             "stopAtEntry": false,
