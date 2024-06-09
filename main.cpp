@@ -1,5 +1,4 @@
 #include <iostream>
-#include <string.h>
 
 using namespace std;
 
@@ -35,6 +34,14 @@ Status TrackPosition(string *s, string t, int &p) {
   return OK;
 }
 
+//递归法输出路径
+Status Trace(Mgraph G, int *path, int i) {
+  if (path[i] != i)
+    Trace(G, path, path[i]);
+  cout <<"->"<< G.vexs[i];
+  return OK;
+}
+
 // Dijkstra算法实现
 Status Dijkstra(Mgraph G, string From, string To) {
   int from, to;
@@ -47,19 +54,18 @@ Status Dijkstra(Mgraph G, string From, string To) {
   int *shortest = (int *)malloc(sizeof(int) * V_SIZE);
   if (!shortest)
     return (OVERFLOW);
+  int *Path = (int *)malloc(sizeof(int) * V_SIZE);
+  if (!Path)
+    return (OVERFLOW);
   Status *IsMin = (Status *)malloc(sizeof(Status) * V_SIZE);
   if (!IsMin)
     return (OVERFLOW);
-  char **Path = (char **)malloc(sizeof(char) * V_SIZE);
-  if (!Path)
-    return (OVERFLOW);
   for (i = 0; i < V_SIZE; i++) {
     shortest[i] = G.edge[from][i];
+    Path[i] = i % INF;
     IsMin[i] = FALSE;
-    strcpy(Path[i],"i");
     if (shortest[i] == 0) {
       IsMin[i] = TRUE;
-      strcpy(Path[i],"\0");
     }
   } //初始化距离数组用于迭代
 
@@ -79,10 +85,13 @@ Status Dijkstra(Mgraph G, string From, string To) {
     for (i = 0; i < V_SIZE; i++) {
       if (shortest[i] > G.edge[MinPos][i] + Min) {
         shortest[i] = G.edge[MinPos][i] + Min;
+        Path[i] = MinPos;
       }
     } //更新距离数组
   }   //迭代结束的条件:对所有结点都找到了最短路径
-  printf("%d", shortest[to]);
+  printf("%d\n", shortest[to]);
+  cout << "路径:" << G.vexs[from];
+  Trace(G,Path,to);
   free(shortest);
   free(IsMin); //释放内存
   return OK;

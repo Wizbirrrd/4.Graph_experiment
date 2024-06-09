@@ -10,8 +10,8 @@
             "request": "launch",
             "program": "/home/wizbird/Code/4.Graph_experiment/main",
             "args": [
-                "南门",
-                "北门"
+                "图书馆",
+                "南门"
             ],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
