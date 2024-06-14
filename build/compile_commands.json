@@ -1,7 +1,7 @@
 [
 {
   "directory": "/home/wizbird/Code/4.Graph_experiment/build",
-  "command": "/usr/bin/c++    -g   -o CMakeFiles/Dijkstra.dir/main.cpp.o -c /home/wizbird/Code/4.Graph_experiment/main.cpp",
+  "command": "/usr/bin/c++ -g -o CMakeFiles/Dijkstra.dir/main.cpp.o -c /home/wizbird/Code/4.Graph_experiment/main.cpp",
   "file": "/home/wizbird/Code/4.Graph_experiment/main.cpp"
 }
 ]
