@@ -56,14 +56,14 @@ Status Trace(Mgraph G, int *path, int i)
 // Dijkstra算法实现
 Status Dijkstra(Mgraph G, string From, string To)
 {
-    int from, to;
+    int from, to = 0;
     if (!TrackPosition(G.vexs, From, from) || !TrackPosition(G.vexs, To, to))
     {
         printf("ERROR_02");
         return ERROR;
     } // 合法性输入检查
 
-    int i;
+    int i = 0;
     int *shortest = (int *)malloc(sizeof(int) * V_SIZE);
     if (!shortest)
         return (OVERFLOW);
@@ -84,7 +84,7 @@ Status Dijkstra(Mgraph G, string From, string To)
         }
     } // 初始化距离数组用于迭代
 
-    int Min, MinPos;
+    int Min, MinPos = 0;
     Status Over = TRUE;
     while (Over)
     {
